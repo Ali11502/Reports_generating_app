@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{%load static%}
+
+
+{% block scripts %}
+<script src="{% static 'sales/home.js' %}" defer></script>
+{% endblock scripts %}
+
+{%block title %}
+home
+{% endblock title %}
+
+{% block content %}
+<!-- Modal -->
+<div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Add report</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="modal-body">
+            <div id="alert-box"></div>
+          <form  id="report-form">
+            {%csrf_token%}
+            {{report_form|crispy}}
+      
+            <button type="submit" class="btn btn-info">Save</button>
+
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% if no_data is not none %}
+  <div class="alert alert-warning" role="alert">
+    {{ no_data }}
+  </div>
+{% endif %}
+  <hr>
+
+<form action="" method="POST">
+    {% csrf_token%}
+    {{search_form}}
+    <button type="submit" class="btn btn-primary">search</button>
+</form>
+
+<br>
+
+{% if sales_list is not none %}
+    <h6>Data: </h6>
+    {{sales_list|safe}}
+    {{positions|safe}}
+    {{merged|safe}}
+    {{df|safe}}
+    <img src="data:image/png;base64, {{chart|safe}}" id="img">
+    <br>
+    <hr>
+<button class="btn btn-primary" id="report_btn" data-bs-toggle="modal" data-bs-target="#reportModal">
+    add report</button>
+{% endif %}
+
+{% endblock content %}
